@@ -1,0 +1,50 @@
+version: '3'
+services:
+  reverse-proxy:
+    image: traefik:v1.7 
+    command: --web --docker --docker.domain=ec2-3-16-54-149.us-east-2.compute.amazonaws.com --logLevel=DEBUG
+    ports:
+      - "80:80"     # The HTTP port
+      - "8080:8080" # The Web UI 
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock 
+    networks:
+      - proxy
+  redis:
+    image: 'redis'
+    labels:
+        - "traefik.enable=false"
+    ports:
+      - '6379:6379'
+    networks:
+      - proxy
+  api:
+    container_name: api
+    image: 'demanet1348/api:1.0.0'
+    labels:
+        - "traefik.frontend.rule=Host:ec2-3-16-54-149.us-east-2.compute.amazonaws.com;PathPrefix:/api/search"
+        - "traefik.port=3000"
+        - "traefik.docker.network=proxy"
+        - "traefik.enable=true"
+    ports:
+      - '3000:3000'
+    links:
+      - redis
+    networks:
+      - proxy
+  web:
+    container_name: web
+    image: 'demanet1348/web:1.0.0'
+    labels:
+        - "traefik.frontend.rule=Host:ec2-3-16-54-149.us-east-2.compute.amazonaws.com;"
+        - "traefik.port=80"
+        - "traefik.docker.network=proxy"
+        - "traefik.enable=true"
+    ports:
+        - '81:80'
+    networks:
+        - proxy              
+networks:
+  proxy:
+    driver: bridge
+    
