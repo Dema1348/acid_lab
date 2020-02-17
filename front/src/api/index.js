@@ -3,7 +3,7 @@ const axios = require('axios');
 const getForecast = async (lat, lng) => {
     const apiConfig = {
         timeout: 30000,
-        baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'http://ec2-3-16-54-149.us-east-2.compute.amazonaws.com',
+        baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'http://ec2-3-134-252-84.us-east-2.compute.amazonaws.com',
         rejectUnauthorized: false,
         strictSSL: false,
 
