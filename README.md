@@ -21,7 +21,7 @@ Docker instalado
 - docker-compose -f docker-compose.yml up -d
 
 
-## Enpoint creado 
+## Endpoint creado 
 - method : GET
 - path: /api/search?lat=${value}&lng=${value}
 
